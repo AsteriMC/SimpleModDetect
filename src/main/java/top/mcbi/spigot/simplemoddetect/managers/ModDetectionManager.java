@@ -13,13 +13,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ModDetectionManager {
     private final SimpleModDetect plugin;
     private final ModChecker modChecker;
-    private final Map<String, List<String>> playerMods = new HashMap<>();
+    private final Map<String, List<String>> playerMods = new ConcurrentHashMap<>();
     @Getter
-    private final Map<String, List<String>> playerChannels = new HashMap<>();
+    private final Map<String, List<String>> playerChannels = new ConcurrentHashMap<>();
 
     public ModDetectionManager(SimpleModDetect plugin, ModChecker modChecker) {
         this.plugin = plugin;
@@ -27,18 +29,14 @@ public class ModDetectionManager {
     }
 
     public void handleDetectedChannel(Player player, String channel) {
-        if(!playerChannels.containsKey(player.getName())) {
-            playerChannels.put(player.getName(), new ArrayList<>());
-        }
-        List<String> channels = playerChannels.get(player.getName());
-        channels.add(channel);
+        playerChannels.computeIfAbsent(player.getName(), key -> new CopyOnWriteArrayList<>()).add(channel);
     }
 
     public void checkPlayerChannels(Player player) {
-        if (!playerChannels.containsKey(player.getName())) {
-            playerChannels.put(player.getName(), new ArrayList<>());
+        if (player.hasPermission("simplemoddetect.bypass")) {
+            return;
         }
-        List<String> liveChannels = playerChannels.get(player.getName());
+        List<String> liveChannels = playerChannels.computeIfAbsent(player.getName(), key -> new CopyOnWriteArrayList<>());
         // 网络线程仍会向 liveChannels 追加；主线程遍历时必须使用快照，否则 ConcurrentModificationException
         List<String> channels = new ArrayList<>(liveChannels);
         List<ChannelModConfig> matchedConfigs = modChecker.checkMods(channels);
@@ -75,6 +73,10 @@ public class ModDetectionManager {
 
     public void handleDetectedMods(Player player, List<String> mods) {
         playerMods.put(player.getName(), mods);
+
+        if (player.hasPermission("simplemoddetect.bypass")) {
+            return;
+        }
 
         List<ChannelModConfig> matchedConfigs = modChecker.checkMods(mods);
         if (matchedConfigs.isEmpty()) {

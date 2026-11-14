@@ -20,12 +20,17 @@ repositories {
     maven { url = 'https://libraries.minecraft.net/' }
     maven { url = 'https://repo.codemc.org/repository/maven-public/' }
     maven { url = 'https://repo.dmulloy2.net/repository/public/' }
+    maven {
+        url = 'http://43.249.192.127:8080/releases'
+        allowInsecureProtocol = true
+    }
 }
 
 dependencies {
     compileOnly fileTree('libs')
     paperweight.paperDevBundle("26.2.build.+")
     shadow "io.papermc:paperlib:1.0.8"
+    shadow 'cn.dg32z.neko:NekoScheduler:1.4.0'
 
     compileOnly 'org.projectlombok:lombok:1.18.44'
     annotationProcessor 'org.projectlombok:lombok:1.18.44'

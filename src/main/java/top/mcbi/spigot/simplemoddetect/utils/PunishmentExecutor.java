@@ -1,5 +1,6 @@
 package top.mcbi.spigot.simplemoddetect.utils;
 
+import cn.dg32z.neko.scheduler.functions.NekoScheduler;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -26,15 +27,17 @@ public class PunishmentExecutor {
             return;
         }
 
-        Bukkit.getScheduler().runTask(plugin, () -> {
-            if (action.type == PunishmentType.COMMAND) {
+        if (action.type == PunishmentType.COMMAND) {
+            NekoScheduler.run(plugin, () -> {
                 for (String command : action.commands) {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), applyPlaceholders(command, placeholders));
                 }
-                return;
-            }
+            });
+            return;
+        }
 
-            if (action.type == PunishmentType.SEND) {
+        if (action.type == PunishmentType.SEND) {
+            NekoScheduler.entity(plugin, player, () -> {
                 if (!player.isOnline()) {
                     return;
                 }
@@ -48,8 +51,8 @@ public class PunishmentExecutor {
                 if (!server.isBlank()) {
                     sendPlayer(player, server);
                 }
-            }
-        });
+            }, null);
+        }
     }
 
     public String applyPlaceholders(String input, Map<String, String> placeholders) {

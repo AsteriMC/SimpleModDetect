@@ -2,6 +2,7 @@ name: SimpleModDetect
 version: 0
 main: top.mcbi.spigot.simplemoddetect.SimpleModDetect
 api-version: '26.2'
+folia-supported: true
 authors: [ LoliColleen ]
 depend: [ ]
 description: A Spigot plugin to detect mods
@@ -15,3 +16,6 @@ permissions:
   simplemoddetect.reload:
     description: 允许重新加载 SimpleModDetect 配置
     default: op
+  simplemoddetect.bypass:
+    description: 拥有此权限的玩家不检查模组
+    default: false

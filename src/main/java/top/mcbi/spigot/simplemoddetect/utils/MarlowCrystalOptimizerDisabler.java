@@ -1,5 +1,6 @@
 package top.mcbi.spigot.simplemoddetect.utils;
 
+import cn.dg32z.neko.scheduler.functions.NekoScheduler;
 import io.netty.channel.Channel;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
@@ -55,7 +56,7 @@ public class MarlowCrystalOptimizerDisabler {
     }
 
     public void sendOptOutPacket(Player player) {
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+        NekoScheduler.async(plugin, () -> {
             try {
                 Channel channel = versionAdapter.getPlayerChannel(player);
                 if (channel == null) {
