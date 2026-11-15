@@ -76,12 +76,24 @@ public class TranslationDetectionManager {
             return;
         }
 
+        if (player.hasPermission(SimpleModDetect.BYPASS_PERMISSION)) {
+            if (config.isDebugMode()) {
+                plugin.getLogger().info("玩家 " + player.getName() + " 拥有绕过权限，跳过翻译键检测");
+            }
+            return;
+        }
+
         stuckRestartAttempts.remove(player.getUniqueId());
         Bukkit.getScheduler().runTaskLater(plugin, () -> startCheck(player), config.getTranslationInitialCheckDelayTicks());
     }
 
     private void startCheck(Player player) {
         if (!player.isOnline()) {
+            return;
+        }
+
+        if (player.hasPermission(SimpleModDetect.BYPASS_PERMISSION)) {
+            lockedPlayers.remove(player.getUniqueId());
             return;
         }
 

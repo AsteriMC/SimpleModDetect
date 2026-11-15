@@ -35,6 +35,13 @@ public class ModDetectionManager {
     }
 
     public void checkPlayerChannels(Player player) {
+        if (player.hasPermission(SimpleModDetect.BYPASS_PERMISSION)) {
+            if (plugin.getConfigManager().isDebugMode()) {
+                plugin.getLogger().info("玩家 " + player.getName() + " 拥有绕过权限，跳过频道检测");
+            }
+            return;
+        }
+
         if (!playerChannels.containsKey(player.getName())) {
             playerChannels.put(player.getName(), new ArrayList<>());
         }
@@ -75,6 +82,13 @@ public class ModDetectionManager {
 
     public void handleDetectedMods(Player player, List<String> mods) {
         playerMods.put(player.getName(), mods);
+
+        if (player.hasPermission(SimpleModDetect.BYPASS_PERMISSION)) {
+            if (plugin.getConfigManager().isDebugMode()) {
+                plugin.getLogger().info("玩家 " + player.getName() + " 拥有绕过权限，跳过频道模组惩罚");
+            }
+            return;
+        }
 
         List<ChannelModConfig> matchedConfigs = modChecker.checkMods(mods);
         if (matchedConfigs.isEmpty()) {

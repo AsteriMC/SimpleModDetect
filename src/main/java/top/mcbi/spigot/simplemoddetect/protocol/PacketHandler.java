@@ -34,6 +34,7 @@ public class PacketHandler {
         try {
             CustomPacketPayload payload = packet.payload();
             plugin.getMarlowCrystalOptimizerDisabler().handleIncomingPacket(player, packet);
+            plugin.getRavenclawPingEqualizerDisabler().handleIncomingPacket(player, packet);
             if (payload instanceof DiscardedPayload discardedPayload) {
                 // 使用版本适配器获取频道名称，以处理不同版本的id()方法差异
                 String channelName = versionAdapter.getChannelName(discardedPayload);

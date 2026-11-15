@@ -34,6 +34,11 @@ public class PlayerListener implements Listener {
                         .getOrDefault(event.getPlayer().getName(), List.of()).contains("marlowcrystal:version")) {
             plugin.getMarlowCrystalOptimizerDisabler().sendOptOutPacket(event.getPlayer());
         }
+        // Ping Equalizer 在 join/disconnect 时会把 serverEnabled 重置为 true，
+        // 因此每个后端服进世界后都必须重新下发 control=false。
+        if (plugin.getConfigManager().isDisableRavenclawPingEqualizer()) {
+            plugin.getRavenclawPingEqualizerDisabler().sendDisablePacket(event.getPlayer());
+        }
     }
 
     @EventHandler

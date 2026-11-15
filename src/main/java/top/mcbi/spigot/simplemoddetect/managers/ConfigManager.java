@@ -37,6 +37,9 @@ public class ConfigManager {
     private boolean disableMarlowCrystalOptimizer;
 
     @Getter
+    private boolean disableRavenclawPingEqualizer;
+
+    @Getter
     private boolean translationEnabled;
     @Getter
     private boolean notifyStaff;
@@ -121,6 +124,7 @@ public class ConfigManager {
 
             debugMode = config.getBoolean("debug-mode", false);
             disableMarlowCrystalOptimizer = config.getBoolean("disable-marlow-crystal-optimizer", true);
+            disableRavenclawPingEqualizer = config.getBoolean("disable-ravenclaw-ping-equalizer", true);
 
             loadChannelDetectConfig();
             loadTranslationDetectConfig();

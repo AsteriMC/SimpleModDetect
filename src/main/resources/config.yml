@@ -3,6 +3,9 @@
 # 调试模式开关 (true/false)
 debug-mode: false
 disable-marlow-crystal-optimizer: true
+# 禁用 Ravenclaw's Ping Equalizer（通过 S2C ravenclawspingequalizer:control 下发 enabled=false）
+# 注意：模组会在 join/disconnect 时把 serverEnabled 重置为 true，BungeeCord 子服传送后目标服也需启用本选项
+disable-ravenclaw-ping-equalizer: true
 # ==========================================
 # 频道检测方式 (通过 custom payload 注册通道检测)
 # ==========================================
@@ -103,10 +106,6 @@ translation-detect:
       key: "gui.protocol_version_field.name"
     SeedCrackerX:
       key: "cracker.enabled"
-    NameTagTweaks:
-      key: "nametagtweaks.key.open_settings"
-    NameTagtweaks:
-      key: "nametag-tweaks.nametag-tweaks"
     HealthIndicators:
       key: "key.categories.healthindicators"
     BetterNameVisibility:
@@ -169,6 +168,12 @@ translation-detect:
       key: "key.category.bettermaceswap.general"
     PearlWindChargeAnalysis:
       key: "key.category.pearlwind_chargeanalysis.category"
+    AutoSwitch:
+      key: "key.autoswitch.toggle"
+    FindMe:
+      key: "key.findme.search"
+    EntityOutliner:
+      key: "key.re-entity-outliner.outline"
 #    XaerosMinimap:
 #      key: "gui.xaero_delete"
 #    XaerosWorldmap:
@@ -193,3 +198,7 @@ translation-detect:
 #      key: "key.category.gammautils.gamma"
 #    InventoryHUD:
 #      key: "key.inventoryhud.category"
+#    NameTagTweaks:
+#      key: "nametagtweaks.key.open_settings"
+#    NameTagtweaks:
+#      key: "nametag-tweaks.nametag-tweaks"

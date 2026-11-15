@@ -16,9 +16,12 @@ import top.mcbi.spigot.simplemoddetect.protocol.PacketHandler;
 import top.mcbi.spigot.simplemoddetect.utils.MarlowCrystalOptimizerDisabler;
 import top.mcbi.spigot.simplemoddetect.utils.ModChecker;
 import top.mcbi.spigot.simplemoddetect.utils.PunishmentExecutor;
+import top.mcbi.spigot.simplemoddetect.utils.RavenclawPingEqualizerDisabler;
 
 @Getter
 public class SimpleModDetect extends JavaPlugin {
+
+    public static final String BYPASS_PERMISSION = "simplemoddetect.bypass";
 
     // Getter方法，供其他类访问
     private ConfigManager configManager;
@@ -29,6 +32,7 @@ public class SimpleModDetect extends JavaPlugin {
     private TranslationDetectionManager translationDetectionManager;
     private SimpleModDetectCommand simpleModDetectCommand;
     private MarlowCrystalOptimizerDisabler marlowCrystalOptimizerDisabler;
+    private RavenclawPingEqualizerDisabler ravenclawPingEqualizerDisabler;
     private PunishmentExecutor punishmentExecutor;
 
     @Override
@@ -65,6 +69,7 @@ public class SimpleModDetect extends JavaPlugin {
         channelInjector = new ChannelInjector(this, packetHandler);
 
         marlowCrystalOptimizerDisabler = new MarlowCrystalOptimizerDisabler(this);
+        ravenclawPingEqualizerDisabler = new RavenclawPingEqualizerDisabler(this);
 
         // 初始化命令处理器
         simpleModDetectCommand = new SimpleModDetectCommand(this);
@@ -82,6 +87,9 @@ public class SimpleModDetect extends JavaPlugin {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 channelInjector.injectPlayer(player);
                 translationDetectionManager.checkPlayer(player);
+                if (configManager.isDisableRavenclawPingEqualizer()) {
+                    ravenclawPingEqualizerDisabler.sendDisablePacket(player);
+                }
             }
         }, 20L);
 
@@ -91,6 +99,7 @@ public class SimpleModDetect extends JavaPlugin {
         getLogger().info("调试模式: " + (configManager.isDebugMode() ? "开启" : "关闭"));
         getLogger().info("频道检测: " + (configManager.isChannelDetectEnabled() ? "开启" : "关闭"));
         getLogger().info("翻译检测: " + (configManager.isTranslationEnabled() ? "开启" : "关闭"));
+        getLogger().info("禁用 Ravenclaw Ping Equalizer: " + (configManager.isDisableRavenclawPingEqualizer() ? "开启" : "关闭"));
     }
 
     @Override
