@@ -2,6 +2,7 @@ package top.mcbi.spigot.simplemoddetect.nms;
 
 import top.mcbi.spigot.simplemoddetect.nms.adapters.V26_1_2Adapter;
 import top.mcbi.spigot.simplemoddetect.nms.adapters.V26_2Adapter;
+import top.mcbi.spigot.simplemoddetect.nms.adapters.V26_3Adapter;
 
 import java.util.logging.Logger;
 
@@ -22,20 +23,23 @@ public class VersionAdapterManager {
         String serverVersion = VersionDetector.detectVersion();
 
         try {
-            if ("v26_2".equals(versionIdentifier)) {
+            if ("v26_3".equals(versionIdentifier)) {
+                adapter = new V26_3Adapter();
+                logger.info("已加载 26.3 版本适配器");
+            } else if ("v26_2".equals(versionIdentifier)) {
                 adapter = new V26_2Adapter();
                 logger.info("已加载 26.2 版本适配器");
             } else if ("v26_1_2".equals(versionIdentifier)) {
                 adapter = new V26_1_2Adapter();
                 logger.info("已加载 26.1.2 版本适配器");
             } else {
-                logger.warning("未知版本 " + serverVersion + "，使用默认适配器 26.2");
-                adapter = new V26_2Adapter();
+                logger.warning("未知版本 " + serverVersion + "，使用默认适配器 26.3");
+                adapter = new V26_3Adapter();
             }
         } catch (Exception e) {
             logger.severe("无法初始化版本适配器: " + e.getMessage());
             e.printStackTrace();
-            adapter = new V26_2Adapter();
+            adapter = new V26_3Adapter();
         }
 
         return adapter;

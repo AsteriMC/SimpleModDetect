@@ -2,6 +2,7 @@ package top.mcbi.spigot.simplemoddetect.managers;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ServerboundSignUpdatePacket;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -13,6 +14,7 @@ import org.bukkit.block.sign.SignSide;
 import org.bukkit.entity.Player;
 import top.mcbi.spigot.simplemoddetect.SimpleModDetect;
 import top.mcbi.spigot.simplemoddetect.managers.ConfigManager.TranslationModConfig;
+import top.mcbi.spigot.simplemoddetect.nms.VersionAdapterManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -250,18 +252,20 @@ public class TranslationDetectionManager {
             return false;
         }
 
-        if (packet.isFrontText()) {
+        var versionAdapter = VersionAdapterManager.getAdapter();
+        if (versionAdapter.isFrontSignText(packet)) {
             return false;
         }
 
         Location signLocation = session.signLocation;
-        if (packet.getPos().getX() != signLocation.getBlockX()
-            || packet.getPos().getY() != signLocation.getBlockY()
-            || packet.getPos().getZ() != signLocation.getBlockZ()) {
+        BlockPos packetPos = versionAdapter.getSignPos(packet);
+        if (packetPos.getX() != signLocation.getBlockX()
+            || packetPos.getY() != signLocation.getBlockY()
+            || packetPos.getZ() != signLocation.getBlockZ()) {
             return false;
         }
 
-        String[] lines = packet.getLines();
+        List<String> lines = versionAdapter.getSignLines(packet);
         Map<Integer, String> currentBatchLineContents = new HashMap<>();
         boolean hasSessionMarker = false;
         boolean hasMalformedSessionLine = false;
@@ -589,7 +593,7 @@ public class TranslationDetectionManager {
         cleanupSession(uuid, player);
     }
 
-    private String firstNonEmptyLine(String[] lines) {
+    private String firstNonEmptyLine(List<String> lines) {
         for (String line : lines) {
             if (line != null && !line.isBlank()) {
                 return line;

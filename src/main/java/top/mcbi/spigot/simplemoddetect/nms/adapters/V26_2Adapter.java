@@ -1,14 +1,18 @@
 package top.mcbi.spigot.simplemoddetect.nms.adapters;
 
 import io.netty.channel.Channel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.DiscardedPayload;
+import net.minecraft.network.protocol.game.ServerboundSignUpdatePacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import top.mcbi.spigot.simplemoddetect.nms.NMSVersionAdapter;
+
+import java.util.List;
 
 /**
  * Paper 26.2 版本适配器实现
@@ -44,6 +48,21 @@ public class V26_2Adapter implements NMSVersionAdapter {
     public String getChannelName(DiscardedPayload discardedPayload) {
         Identifier id = discardedPayload.id();
         return id.toString();
+    }
+
+    @Override
+    public boolean isFrontSignText(ServerboundSignUpdatePacket packet) {
+        return LegacySignPacketAccess.isFrontText(packet);
+    }
+
+    @Override
+    public BlockPos getSignPos(ServerboundSignUpdatePacket packet) {
+        return LegacySignPacketAccess.getPos(packet);
+    }
+
+    @Override
+    public List<String> getSignLines(ServerboundSignUpdatePacket packet) {
+        return LegacySignPacketAccess.getLines(packet);
     }
 
     @Override

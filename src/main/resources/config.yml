@@ -130,8 +130,8 @@ translation-detect:
       key: "key.category.cheatutils.common"
     Neat:
       key: "neat.keybind.toggle"
-    NoChatReport:
-      key: "key.nochatreports.cmd"
+    NoChatReports:
+      key: "gui.nochatreports.secure_chat"
     BridgingMod:
       key: "config.bridgingmod.title"
     ShoulderSurfing:

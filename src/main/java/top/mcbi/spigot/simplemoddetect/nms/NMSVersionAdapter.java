@@ -1,8 +1,12 @@
 package top.mcbi.spigot.simplemoddetect.nms;
 
 import io.netty.channel.Channel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.common.custom.DiscardedPayload;
+import net.minecraft.network.protocol.game.ServerboundSignUpdatePacket;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 /**
  * NMS版本适配器接口
@@ -38,11 +42,25 @@ public interface NMSVersionAdapter {
      * @return 频道名称字符串，如 "minecraft:register"
      */
     String getChannelName(DiscardedPayload discardedPayload);
+
+    /**
+     * 木牌更新包是否为正面文本
+     */
+    boolean isFrontSignText(ServerboundSignUpdatePacket packet);
+
+    /**
+     * 木牌更新包坐标
+     */
+    BlockPos getSignPos(ServerboundSignUpdatePacket packet);
+
+    /**
+     * 木牌更新包文本行
+     */
+    List<String> getSignLines(ServerboundSignUpdatePacket packet);
     
     /**
      * 获取版本名称
-     * @return 版本名称，如 "26.2"
+     * @return 版本名称，如 "26.3"
      */
     String getVersionName();
 }
-
