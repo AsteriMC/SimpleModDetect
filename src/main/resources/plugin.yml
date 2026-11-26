@@ -1,9 +1,8 @@
 name: SimpleModDetect
-version: 0
+version: 1.5.0
 main: top.mcbi.spigot.simplemoddetect.SimpleModDetect
 api-version: '26.3'
-authors: [ LoliColleen ]
-depend: [ ]
+authors: [ LoliColleen, Dg32z_ ]
 description: A Spigot plugin to detect mods
 commands:
   simplemoddetect:
