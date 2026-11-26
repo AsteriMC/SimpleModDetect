@@ -1,4 +1,4 @@
-package top.mcbi.spigot.simplemoddetect.utils;
+package top.mcbi.spigot.simplemoddetect.features;
 
 import cn.chengzhimeow.ccscheduler.scheduler.CCScheduler;
 import io.netty.channel.Channel;

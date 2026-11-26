@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import net.minecraft.network.protocol.game.ServerboundSignUpdatePacket;
 import top.mcbi.spigot.simplemoddetect.nms.NMSVersionAdapter;
 import top.mcbi.spigot.simplemoddetect.nms.VersionAdapterManager;
-import top.mcbi.spigot.simplemoddetect.utils.ModChecker;
+import top.mcbi.spigot.simplemoddetect.managers.ModChecker;
 import top.mcbi.spigot.simplemoddetect.SimpleModDetect;
 
 import java.nio.charset.StandardCharsets;

@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import top.mcbi.spigot.simplemoddetect.SimpleModDetect;
 import top.mcbi.spigot.simplemoddetect.managers.ConfigManager.TranslationModConfig;
 import top.mcbi.spigot.simplemoddetect.nms.VersionAdapterManager;
+import top.mcbi.spigot.simplemoddetect.constant.Permissions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,11 +81,7 @@ public class TranslationDetectionManager {
         if (!config.isTranslationEnabled() || config.getTranslationMods().isEmpty()) {
             return;
         }
-        if (player.hasPermission("simplemoddetect.bypass")) {
-            return;
-        }
-
-        if (player.hasPermission(SimpleModDetect.BYPASS_PERMISSION)) {
+        if (Permissions.BYPASS_PERMISSION.has(player)) {
             if (config.isDebugMode()) {
                 plugin.getLogger().info("玩家 " + player.getName() + " 拥有绕过权限，跳过翻译键检测");
             }
@@ -100,7 +97,7 @@ public class TranslationDetectionManager {
             return;
         }
 
-        if (player.hasPermission(SimpleModDetect.BYPASS_PERMISSION)) {
+        if (Permissions.BYPASS_PERMISSION.has(player)) {
             lockedPlayers.remove(player.getUniqueId());
             return;
         }
@@ -406,7 +403,7 @@ public class TranslationDetectionManager {
 
         Component staffNotification = Component.text("[SimpleModDetect] " + message, NamedTextColor.RED);
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (onlinePlayer.hasPermission(config.getNotificationPermission())) {
+            if (Permissions.NOTIFY_PERMISSION.has(onlinePlayer)) {
                 onlinePlayer.sendMessage(staffNotification);
             }
         }

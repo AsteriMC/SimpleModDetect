@@ -1,6 +1,5 @@
-package top.mcbi.spigot.simplemoddetect.utils;
+package top.mcbi.spigot.simplemoddetect.managers;
 
-import top.mcbi.spigot.simplemoddetect.managers.ConfigManager;
 import top.mcbi.spigot.simplemoddetect.managers.ConfigManager.ChannelModConfig;
 
 import java.util.ArrayList;
