@@ -1,5 +1,6 @@
 package top.mcbi.spigot.simplemoddetect;
 
+import cn.chengzhimeow.ccscheduler.scheduler.CCScheduler;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -83,7 +84,7 @@ public class SimpleModDetect extends JavaPlugin {
         Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         // 为已在线玩家注入监听器
-        Bukkit.getScheduler().runTaskLater(this, () -> {
+        CCScheduler.getInstance().getGlobalRegionScheduler().runTaskLater(this, 20L, () -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 channelInjector.injectPlayer(player);
                 translationDetectionManager.checkPlayer(player);
@@ -91,7 +92,7 @@ public class SimpleModDetect extends JavaPlugin {
                     ravenclawPingEqualizerDisabler.sendDisablePacket(player);
                 }
             }
-        }, 20L);
+        });
 
         getLogger().info("SimpleModDetect 已启用");
         getLogger().info("服务器版本: " + serverVersion);

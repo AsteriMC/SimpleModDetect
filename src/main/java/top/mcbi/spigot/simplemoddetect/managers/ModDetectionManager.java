@@ -126,11 +126,11 @@ public class ModDetectionManager {
         }
 
         executePunishment(
-            player,
-            plugin.getConfigManager().getChannelAction(),
-            player.getName(),
-            String.join(", ", modNames),
-            String.join(", ", detectedMods)
+                player,
+                plugin.getConfigManager().getChannelAction(),
+                player.getName(),
+                String.join(", ", modNames),
+                String.join(", ", detectedMods)
         );
     }
 
@@ -168,4 +168,3 @@ public class ModDetectionManager {
         playerMods.remove(playerName);
     }
 }
-

@@ -1,5 +1,6 @@
 package top.mcbi.spigot.simplemoddetect.utils;
 
+import cn.chengzhimeow.ccscheduler.scheduler.CCScheduler;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -16,6 +17,7 @@ public class PunishmentExecutor {
     private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacyAmpersand();
 
     private final SimpleModDetect plugin;
+    private final CCScheduler ccScheduler = CCScheduler.getInstance();
 
     public PunishmentExecutor(SimpleModDetect plugin) {
         this.plugin = plugin;
@@ -26,15 +28,17 @@ public class PunishmentExecutor {
             return;
         }
 
-        Bukkit.getScheduler().runTask(plugin, () -> {
-            if (action.type == PunishmentType.COMMAND) {
+        if (action.type == PunishmentType.COMMAND) {
+            ccScheduler.getGlobalRegionScheduler().runTask(plugin, () -> {
                 for (String command : action.commands) {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), applyPlaceholders(command, placeholders));
                 }
-                return;
-            }
+            });
+            return;
+        }
 
-            if (action.type == PunishmentType.SEND) {
+        if (action.type == PunishmentType.SEND) {
+            ccScheduler.getEntityScheduler().runTask(plugin, player, () -> {
                 if (!player.isOnline()) {
                     return;
                 }
@@ -48,8 +52,8 @@ public class PunishmentExecutor {
                 if (!server.isBlank()) {
                     sendPlayer(player, server);
                 }
-            }
-        });
+            });
+        }
     }
 
     public String applyPlaceholders(String input, Map<String, String> placeholders) {
