@@ -1,8 +1,7 @@
 name: SimpleModDetect
 version: 0
 main: top.mcbi.spigot.simplemoddetect.SimpleModDetect
-api-version: '26.2'
-folia-supported: true
+api-version: '26.3'
 authors: [ LoliColleen ]
 depend: [ ]
 description: A Spigot plugin to detect mods
@@ -17,5 +16,17 @@ permissions:
     description: 允许重新加载 SimpleModDetect 配置
     default: op
   simplemoddetect.bypass:
-    description: 拥有此权限的玩家不检查模组
+    description: 绕过全部模组检测（频道检测与翻译键检测）
     default: false
+  simplemoddetect.notify:
+    description: 接收模组检测通知
+    default: op
+  simplemoddetect.check:
+    description: 查看指定玩家模组列表
+    default: op
+  simplemoddetect.list:
+    description: 查看所有已检测玩家模组
+    default: op
+  simplemoddetect.debug:
+    description: 切换调试模式
+    default: op

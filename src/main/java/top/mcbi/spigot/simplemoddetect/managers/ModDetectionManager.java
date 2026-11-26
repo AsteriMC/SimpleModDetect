@@ -13,15 +13,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ModDetectionManager {
     private final SimpleModDetect plugin;
     private final ModChecker modChecker;
-    private final Map<String, List<String>> playerMods = new ConcurrentHashMap<>();
+    private final Map<String, List<String>> playerMods = new HashMap<>();
     @Getter
-    private final Map<String, List<String>> playerChannels = new ConcurrentHashMap<>();
+    private final Map<String, List<String>> playerChannels = new HashMap<>();
 
     public ModDetectionManager(SimpleModDetect plugin, ModChecker modChecker) {
         this.plugin = plugin;
@@ -29,14 +27,25 @@ public class ModDetectionManager {
     }
 
     public void handleDetectedChannel(Player player, String channel) {
-        playerChannels.computeIfAbsent(player.getName(), key -> new CopyOnWriteArrayList<>()).add(channel);
+        if(!playerChannels.containsKey(player.getName())) {
+            playerChannels.put(player.getName(), new ArrayList<>());
+        }
+        List<String> channels = playerChannels.get(player.getName());
+        channels.add(channel);
     }
 
     public void checkPlayerChannels(Player player) {
-        if (player.hasPermission("simplemoddetect.bypass")) {
+        if (player.hasPermission(SimpleModDetect.BYPASS_PERMISSION)) {
+            if (plugin.getConfigManager().isDebugMode()) {
+                plugin.getLogger().info("玩家 " + player.getName() + " 拥有绕过权限，跳过频道检测");
+            }
             return;
         }
-        List<String> liveChannels = playerChannels.computeIfAbsent(player.getName(), key -> new CopyOnWriteArrayList<>());
+
+        if (!playerChannels.containsKey(player.getName())) {
+            playerChannels.put(player.getName(), new ArrayList<>());
+        }
+        List<String> liveChannels = playerChannels.get(player.getName());
         // 网络线程仍会向 liveChannels 追加；主线程遍历时必须使用快照，否则 ConcurrentModificationException
         List<String> channels = new ArrayList<>(liveChannels);
         List<ChannelModConfig> matchedConfigs = modChecker.checkMods(channels);
@@ -74,7 +83,10 @@ public class ModDetectionManager {
     public void handleDetectedMods(Player player, List<String> mods) {
         playerMods.put(player.getName(), mods);
 
-        if (player.hasPermission("simplemoddetect.bypass")) {
+        if (player.hasPermission(SimpleModDetect.BYPASS_PERMISSION)) {
+            if (plugin.getConfigManager().isDebugMode()) {
+                plugin.getLogger().info("玩家 " + player.getName() + " 拥有绕过权限，跳过频道模组惩罚");
+            }
             return;
         }
 
@@ -114,11 +126,11 @@ public class ModDetectionManager {
         }
 
         executePunishment(
-            player,
-            plugin.getConfigManager().getChannelAction(),
-            player.getName(),
-            String.join(", ", modNames),
-            String.join(", ", detectedMods)
+                player,
+                plugin.getConfigManager().getChannelAction(),
+                player.getName(),
+                String.join(", ", modNames),
+                String.join(", ", detectedMods)
         );
     }
 
@@ -156,4 +168,3 @@ public class ModDetectionManager {
         playerMods.remove(playerName);
     }
 }
-
