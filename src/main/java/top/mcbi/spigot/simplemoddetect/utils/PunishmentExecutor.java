@@ -1,6 +1,6 @@
 package top.mcbi.spigot.simplemoddetect.utils;
 
-import cn.dg32z.neko.scheduler.functions.NekoScheduler;
+import cn.chengzhimeow.ccscheduler.scheduler.CCScheduler;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -17,6 +17,7 @@ public class PunishmentExecutor {
     private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacyAmpersand();
 
     private final SimpleModDetect plugin;
+    private final CCScheduler ccScheduler = CCScheduler.getInstance();
 
     public PunishmentExecutor(SimpleModDetect plugin) {
         this.plugin = plugin;
@@ -28,7 +29,7 @@ public class PunishmentExecutor {
         }
 
         if (action.type == PunishmentType.COMMAND) {
-            NekoScheduler.run(plugin, () -> {
+            ccScheduler.getGlobalRegionScheduler().runTask(plugin, () -> {
                 for (String command : action.commands) {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), applyPlaceholders(command, placeholders));
                 }
@@ -37,7 +38,7 @@ public class PunishmentExecutor {
         }
 
         if (action.type == PunishmentType.SEND) {
-            NekoScheduler.entity(plugin, player, () -> {
+            ccScheduler.getEntityScheduler().runTask(plugin, player, () -> {
                 if (!player.isOnline()) {
                     return;
                 }
@@ -51,7 +52,7 @@ public class PunishmentExecutor {
                 if (!server.isBlank()) {
                     sendPlayer(player, server);
                 }
-            }, null);
+            });
         }
     }
 

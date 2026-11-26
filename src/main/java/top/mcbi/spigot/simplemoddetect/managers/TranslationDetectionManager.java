@@ -1,7 +1,7 @@
 package top.mcbi.spigot.simplemoddetect.managers;
 
-import cn.dg32z.neko.scheduler.functions.NekoScheduler;
-import cn.dg32z.neko.scheduler.task.NekoTask;
+import cn.chengzhimeow.ccscheduler.scheduler.CCScheduler;
+import cn.chengzhimeow.ccscheduler.task.CCTask;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.network.protocol.game.ServerboundSignUpdatePacket;
@@ -33,9 +33,10 @@ public class TranslationDetectionManager {
     private static final int MAX_INVALID_RESPONSE_RETRIES = 3;
 
     private final SimpleModDetect plugin;
+    private final CCScheduler ccScheduler = CCScheduler.getInstance();
     private final Map<UUID, TranslationCheckSession> sessions = new ConcurrentHashMap<>();
     private final Set<UUID> lockedPlayers = ConcurrentHashMap.newKeySet();
-    private final Map<UUID, NekoTask> stuckWatchdogTasks = new ConcurrentHashMap<>();
+    private final Map<UUID, CCTask> stuckWatchdogTasks = new ConcurrentHashMap<>();
     private final Map<UUID, Integer> stuckRestartAttempts = new ConcurrentHashMap<>();
 
     private record ParsedPacketLine(int batchId, int lineIndex, String content) {
@@ -82,7 +83,7 @@ public class TranslationDetectionManager {
         }
 
         stuckRestartAttempts.remove(player.getUniqueId());
-        NekoScheduler.entityLater(plugin, player, () -> startCheck(player), null, config.getTranslationInitialCheckDelayTicks());
+        ccScheduler.getEntityScheduler().runTaskLater(plugin, player, config.getTranslationInitialCheckDelayTicks(), () -> startCheck(player));
     }
 
     private void startCheck(Player player) {
@@ -121,10 +122,10 @@ public class TranslationDetectionManager {
             return;
         }
 
-        NekoTask watchdogTask = NekoScheduler.entityLater(plugin, player, () -> {
+        CCTask watchdogTask = ccScheduler.getEntityScheduler().runTaskLater(plugin, player, stuckSeconds * 20L, () -> {
             stuckWatchdogTasks.remove(uuid);
             handleStuckWatchdog(player);
-        }, null, stuckSeconds * 20L);
+        });
         stuckWatchdogTasks.put(uuid, watchdogTask);
     }
 
@@ -151,7 +152,7 @@ public class TranslationDetectionManager {
     }
 
     private void cancelStuckWatchdog(UUID uuid) {
-        NekoTask task = stuckWatchdogTasks.remove(uuid);
+        CCTask task = stuckWatchdogTasks.remove(uuid);
         if (task != null) {
             task.cancel();
         }
@@ -217,14 +218,14 @@ public class TranslationDetectionManager {
         player.sendBlockUpdate(location, signState);
         session.fakeSignVisible = true;
 
-        NekoScheduler.entityLater(plugin, player, () -> {
+        ccScheduler.getEntityScheduler().runTaskLater(plugin, player, plugin.getConfigManager().getTranslationOpenSignDelayTicks(), () -> {
             if (!player.isOnline() || sessions.get(player.getUniqueId()) != session) {
                 return;
             }
 
             player.openVirtualSign(location, Side.BACK);
             player.closeInventory();
-        }, null, plugin.getConfigManager().getTranslationOpenSignDelayTicks());
+        });
     }
 
     private void restoreClientBlock(Player player, TranslationCheckSession session) {
@@ -311,11 +312,11 @@ public class TranslationDetectionManager {
                     return true;
                 }
 
-                NekoScheduler.entity(plugin, player, () -> {
+                ccScheduler.getEntityScheduler().runTask(plugin, player, () -> {
                     if (sessions.get(player.getUniqueId()) == session) {
                         restoreClientBlock(player, session);
                     }
-                }, null);
+                });
 
                 for (int lineIndex = 0; lineIndex < session.currentLineGroups.size(); lineIndex++) {
                     List<TranslationModConfig> lineGroup = session.currentLineGroups.get(lineIndex);
@@ -345,7 +346,7 @@ public class TranslationDetectionManager {
                 markCurrentBatchHandled(session);
             }
 
-            NekoScheduler.entityLater(plugin, player, () -> openNextBatch(player, session), null, plugin.getConfigManager().getTranslationNextBatchDelayTicks());
+            ccScheduler.getEntityScheduler().runTaskLater(plugin, player, plugin.getConfigManager().getTranslationNextBatchDelayTicks(), () -> openNextBatch(player, session));
         } catch (Exception exception) {
             plugin.getLogger().log(Level.WARNING, "Failed to handle sign update packet", exception);
             retryOrAbortCurrentBatch(
@@ -454,7 +455,7 @@ public class TranslationDetectionManager {
         }
 
         if (player != null && player.isOnline()) {
-            NekoScheduler.entityLater(plugin, player, () -> openNextBatch(player, session), null, plugin.getConfigManager().getTranslationNextBatchDelayTicks());
+            ccScheduler.getEntityScheduler().runTaskLater(plugin, player, plugin.getConfigManager().getTranslationNextBatchDelayTicks(), () -> openNextBatch(player, session));
         } else {
             cleanupSession(uuid, player);
         }
