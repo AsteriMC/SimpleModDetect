@@ -12,7 +12,6 @@ disable-ravenclaw-ping-equalizer: true
 channel-detect:
   enabled: true
   notify-staff: true
-  notification-permission: "simplemoddetect.notify"
   action:
     # 统一惩罚行为，可选 COMMAND 或 SEND
     type: COMMAND
@@ -49,7 +48,6 @@ channel-detect:
 translation-detect:
   enabled: true
   notify-staff: true
-  notification-permission: "simplemoddetect.notify"
   batch:
     # 每行合并多少个翻译键进行检测
     # 实际每次木牌最多会检测 4 行，因此单次总量约为 4 * 此值
@@ -168,8 +166,6 @@ translation-detect:
       key: "key.category.bettermaceswap.general"
     PearlWindChargeAnalysis:
       key: "key.category.pearlwind_chargeanalysis.category"
-    AutoSwitch:
-      key: "key.autoswitch.toggle"
     FindMe:
       key: "key.findme.search"
     EntityOutliner:

@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import top.mcbi.spigot.simplemoddetect.SimpleModDetect;
 import top.mcbi.spigot.simplemoddetect.managers.ConfigManager.ChannelModConfig;
-import top.mcbi.spigot.simplemoddetect.utils.ModChecker;
+import top.mcbi.spigot.simplemoddetect.constant.Permissions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +35,7 @@ public class ModDetectionManager {
     }
 
     public void checkPlayerChannels(Player player) {
-        if (player.hasPermission(SimpleModDetect.BYPASS_PERMISSION)) {
+        if (Permissions.BYPASS_PERMISSION.has(player)) {
             if (plugin.getConfigManager().isDebugMode()) {
                 plugin.getLogger().info("玩家 " + player.getName() + " 拥有绕过权限，跳过频道检测");
             }
@@ -83,7 +83,7 @@ public class ModDetectionManager {
     public void handleDetectedMods(Player player, List<String> mods) {
         playerMods.put(player.getName(), mods);
 
-        if (player.hasPermission(SimpleModDetect.BYPASS_PERMISSION)) {
+        if (Permissions.BYPASS_PERMISSION.has(player)) {
             if (plugin.getConfigManager().isDebugMode()) {
                 plugin.getLogger().info("玩家 " + player.getName() + " 拥有绕过权限，跳过频道模组惩罚");
             }
@@ -150,7 +150,7 @@ public class ModDetectionManager {
 
         Component staffNotification = Component.text("[SimpleModDetect] " + message, NamedTextColor.RED);
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (onlinePlayer.hasPermission(config.getChannelNotificationPermission())) {
+            if (Permissions.NOTIFY_PERMISSION.has(onlinePlayer)) {
                 onlinePlayer.sendMessage(staffNotification);
             }
         }

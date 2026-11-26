@@ -1,4 +1,4 @@
-package top.mcbi.spigot.simplemoddetect.utils;
+package top.mcbi.spigot.simplemoddetect.features;
 
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;

@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 import top.mcbi.spigot.simplemoddetect.SimpleModDetect;
+import top.mcbi.spigot.simplemoddetect.constant.Permissions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class SimpleModDetectCommand implements CommandExecutor, TabCompleter {
     }
 
     private boolean handleReload(CommandSender sender) {
-        if (!sender.hasPermission("simplemoddetect.reload")) {
+        if (!Permissions.RELOAD_PERMISSION.has(sender)) {
             sender.sendMessage("§c你没有权限执行此命令");
             return true;
         }
@@ -60,7 +61,7 @@ public class SimpleModDetectCommand implements CommandExecutor, TabCompleter {
     }
 
     private boolean handleCheck(CommandSender sender, String[] args) {
-        if (!sender.hasPermission("simplemoddetect.check")) {
+        if (!Permissions.CHECK_PERMISSION.has(sender)) {
             sender.sendMessage("§c你没有权限执行此命令");
             return true;
         }
@@ -84,7 +85,7 @@ public class SimpleModDetectCommand implements CommandExecutor, TabCompleter {
     }
 
     private boolean handleList(CommandSender sender) {
-        if (!sender.hasPermission("simplemoddetect.list")) {
+        if (!Permissions.LIST_PERMISSION.has(sender)) {
             sender.sendMessage("§c你没有权限执行此命令");
             return true;
         }
@@ -103,7 +104,7 @@ public class SimpleModDetectCommand implements CommandExecutor, TabCompleter {
     }
 
     private boolean handleDebug(CommandSender sender) {
-        if (!sender.hasPermission("simplemoddetect.debug")) {
+        if (!Permissions.DEBUG_PERMISSION.has(sender)) {
             sender.sendMessage("§c你没有权限执行此命令");
             return true;
         }

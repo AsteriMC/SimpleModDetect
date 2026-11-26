@@ -1,4 +1,4 @@
-package top.mcbi.spigot.simplemoddetect.utils;
+package top.mcbi.spigot.simplemoddetect.managers;
 
 import cn.chengzhimeow.ccscheduler.scheduler.CCScheduler;
 import com.google.common.io.ByteArrayDataOutput;

@@ -6,25 +6,22 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import top.mcbi.spigot.simplemoddetect.commands.SimpleModDetectCommand;
+import top.mcbi.spigot.simplemoddetect.features.MarlowCrystalOptimizerDisabler;
+import top.mcbi.spigot.simplemoddetect.features.RavenclawPingEqualizerDisabler;
 import top.mcbi.spigot.simplemoddetect.listeners.PlayerListener;
 import top.mcbi.spigot.simplemoddetect.managers.ConfigManager;
+import top.mcbi.spigot.simplemoddetect.managers.ModChecker;
 import top.mcbi.spigot.simplemoddetect.managers.ModDetectionManager;
+import top.mcbi.spigot.simplemoddetect.managers.PunishmentExecutor;
 import top.mcbi.spigot.simplemoddetect.managers.TranslationDetectionManager;
 import top.mcbi.spigot.simplemoddetect.nms.VersionAdapterManager;
 import top.mcbi.spigot.simplemoddetect.nms.VersionDetector;
 import top.mcbi.spigot.simplemoddetect.protocol.ChannelInjector;
 import top.mcbi.spigot.simplemoddetect.protocol.PacketHandler;
-import top.mcbi.spigot.simplemoddetect.utils.MarlowCrystalOptimizerDisabler;
-import top.mcbi.spigot.simplemoddetect.utils.ModChecker;
-import top.mcbi.spigot.simplemoddetect.utils.PunishmentExecutor;
-import top.mcbi.spigot.simplemoddetect.utils.RavenclawPingEqualizerDisabler;
 
 @Getter
 public class SimpleModDetect extends JavaPlugin {
 
-    public static final String BYPASS_PERMISSION = "simplemoddetect.bypass";
-
-    // Getter方法，供其他类访问
     private ConfigManager configManager;
     private ModChecker modChecker;
     private PacketHandler packetHandler;

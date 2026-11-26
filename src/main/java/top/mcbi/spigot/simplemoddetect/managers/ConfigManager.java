@@ -27,8 +27,6 @@ public class ConfigManager {
     @Getter
     private boolean channelNotifyStaff;
     @Getter
-    private String channelNotificationPermission;
-    @Getter
     private PunishmentAction channelAction;
     @Getter
     private final List<ChannelModConfig> channelMods = new ArrayList<>();
@@ -43,8 +41,6 @@ public class ConfigManager {
     private boolean translationEnabled;
     @Getter
     private boolean notifyStaff;
-    @Getter
-    private String notificationPermission;
     @Getter
     private long translationInitialCheckDelayTicks;
     @Getter
@@ -136,7 +132,6 @@ public class ConfigManager {
     private void loadChannelDetectConfig() {
         channelDetectEnabled = config.getBoolean("channel-detect.enabled", true);
         channelNotifyStaff = config.getBoolean("channel-detect.notify-staff", true);
-        channelNotificationPermission = config.getString("channel-detect.notification-permission", "simplemoddetect.notify");
         channelAction = parsePunishmentAction(config.getConfigurationSection("channel-detect"), "频道检测", true);
 
         channelMods.clear();
@@ -183,7 +178,6 @@ public class ConfigManager {
     private void loadTranslationDetectConfig() {
         translationEnabled = config.getBoolean("translation-detect.enabled", true);
         notifyStaff = config.getBoolean("translation-detect.notify-staff", true);
-        notificationPermission = config.getString("translation-detect.notification-permission", "simplemoddetect.notify");
         translationInitialCheckDelayTicks = Math.max(0L, config.getLong("translation-detect.timing.initial-check-delay-ticks", 10L));
         translationOpenSignDelayTicks = Math.max(0L, config.getLong("translation-detect.timing.open-sign-delay-ticks", 1L));
         translationNextBatchDelayTicks = Math.max(0L, config.getLong("translation-detect.timing.next-batch-delay-ticks", 1L));
